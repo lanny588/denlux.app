@@ -1,0 +1,39 @@
+name: Deploy to Vercel
+
+on:
+  push:
+    branches:
+      - main  # Change the branch if you're deploying from a different branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout repository
+      - name: Checkout the codebase
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18  # Adjust the Node.js version if needed
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Step 4: Add Vercel Analytics (optional if it's already in your package.json)
+      - name: Install @vercel/analytics
+        run: npm install @vercel/analytics
+
+      # Step 5: Build your project
+      - name: Build the project
+        run: npm run build
+
+      # Step 6: Deploy to Vercel
+      - name: Deploy to Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: npx vercel --token=$VERCEL_TOKEN --prod
